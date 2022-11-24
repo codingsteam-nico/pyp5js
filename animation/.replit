@@ -1,0 +1,2 @@
+entrypoint="main.py"
+hidden=["sketch.py","processing.py"]
