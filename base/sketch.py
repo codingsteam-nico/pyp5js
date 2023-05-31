@@ -7,7 +7,7 @@ import main
 structure_methods = [
     "preload",
     "setup",
-    # "draw"
+    "draw"
 ]
 
 event_handlers = [
@@ -29,30 +29,39 @@ for bindable in structure_methods + event_handlers:
         def binding():
             bind = getattr(main, bindable)
             if bindable in event_handlers:
-                
+
                 @functools.wraps(bind)
                 def bind_wrapper(event):
                     bind()
                 setattr(processing.sketch, bindable, bind_wrapper)
-    
+
             else:
                 setattr(processing.sketch, bindable, bind)
-        
+
         binding()
-        
+
     except AttributeError:
         pass
 
 
 def run_sketch(*args):
-    processing.sketch.draw = main.draw
-    processing.sketch.setup()
-    
+    if hasattr(main, "draw"):
+        processing.sketch.draw = main.draw
+    if hasattr(main, "setup"):
+        processing.sketch.setup()
 
-if hasattr(main, "preload"):
+
+def do_preload():
     processing.sketch.preload()
     processing.window.Promise.all(processing.preloaded_resources).then(
         run_sketch)
 
-else:
-    run_sketch()
+
+def main():
+    if hasattr(main, "preload"):
+        do_preload()
+    else:
+        run_sketch()
+
+
+main()

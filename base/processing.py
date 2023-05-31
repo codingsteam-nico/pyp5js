@@ -1,3 +1,5 @@
+# type: ignore
+
 import functools
 
 from browser import window
@@ -18,6 +20,7 @@ def loader_promise(loader):
     @functools.wraps(loader)
     def create_loader(path):
         resource = None
+
         def promise(resolve, reject):
             nonlocal resource
             resource = loader(path, resolve, reject)
@@ -29,3 +32,4 @@ def loader_promise(loader):
 preloaded_resources = []
 loadImage = loader_promise(sketch.loadImage)
 loadSound = loader_promise(sketch.loadSound)
+loadFont = loader_promise(sketch.loadFont)
